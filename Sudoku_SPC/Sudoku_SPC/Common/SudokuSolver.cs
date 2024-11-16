@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +20,18 @@ namespace Sudoku_SPC.Common
         {
             this.size = size;
             InitializeMatrix(size);
+        }
+
+        public void FillMatrixFromFile(string gameFilePath)
+        {
+            if (File.Exists(gameFilePath))
+            {
+
+            }
+            else
+            {
+                throw new Exception("Game file does not exist!");
+            }
         }
 
         private void InitializeMatrix(int size)

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -19,13 +20,14 @@ namespace Sudoku_SPC
         private int heightField = 50;
         private int padding = 2;
 
+        private SudokuSolver sudokuSolver;
         public Form1()
         {
             InitializeComponent();
-
             InitializeSudokuMatrix();
-
             this.CenterToScreen();
+
+            sudokuSolver = new SudokuSolver(lengthOfSquare*lengthOfSquare);
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -90,6 +92,30 @@ namespace Sudoku_SPC
                         Validator.ProcessNewInput(rtb);
                     };
                     this.panelSudoku.Controls.Add(richTextBox);
+                }
+            }
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
+                openFileDialog.Title = "Select a Text File";
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string filePath = openFileDialog.FileName;
+                    // Read the file contents
+                    try
+                    {
+                        string fileContent = File.ReadAllText(filePath);
+                        contentTextBox.Text = fileContent; // Display contents in the TextBox
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Error reading file: " + ex.Message);
+                    }
                 }
             }
         }
