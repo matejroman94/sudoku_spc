@@ -43,8 +43,8 @@ namespace Sudoku_SPC
                         Multiline = false,
                         Text = $"{i}",
                         Location = new System.Drawing.Point(
-                            j* (widthField + padding) + padding,
-                            i* (heightField + padding) + padding),
+                            j* (widthField + padding),
+                            i* (heightField + padding)),
                         BorderStyle = BorderStyle.None,
                         SelectionAlignment = HorizontalAlignment.Center,
                         Font = new System.Drawing.Font("Microsoft Sans Serif", 25.0f)
