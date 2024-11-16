@@ -1,3 +1,4 @@
 ﻿
-int[] hey = new int[] { 1, 2, 3, 4, 5 };
+int div = 8 / 3;
+Console.WriteLine(div);
 

@@ -163,12 +163,14 @@
             // 
             // btnSolvePuzzle
             // 
+            this.btnSolvePuzzle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSolvePuzzle.Location = new System.Drawing.Point(48, 38);
             this.btnSolvePuzzle.Name = "btnSolvePuzzle";
-            this.btnSolvePuzzle.Size = new System.Drawing.Size(75, 23);
+            this.btnSolvePuzzle.Size = new System.Drawing.Size(150, 35);
             this.btnSolvePuzzle.TabIndex = 2;
             this.btnSolvePuzzle.Text = "Solve puzzle";
             this.btnSolvePuzzle.UseVisualStyleBackColor = true;
+            this.btnSolvePuzzle.Click += new System.EventHandler(this.btnSolvePuzzle_Click);
             // 
             // Form1
             // 

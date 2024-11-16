@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Sudoku_SPC
 {
@@ -22,6 +23,8 @@ namespace Sudoku_SPC
 
         private SudokuSolver sudokuSolver;
         private Task sudokuSolverTask = null;
+
+        private RichTextBox[][] cells = null;
         public Form1()
         {
             InitializeComponent();
@@ -30,6 +33,9 @@ namespace Sudoku_SPC
             CenterToScreen();
 
             sudokuSolver = new SudokuSolver(lengthOfSquare*lengthOfSquare);
+            sudokuSolver.GridChanged += SudokuSolver_GridChanged;
+            sudokuSolver.SudokuSolved += SudokuSolver_SudokuSolved;
+            sudokuSolver.ExceptionThrown += SudokuSolver_ExceptionThrown;
 
 #if DEBUG
             sudokuSolver.FillGridFromFile("sudoku.txt");
@@ -46,7 +52,7 @@ namespace Sudoku_SPC
         {
             // Calculate the center position
             int x = (this.ClientSize.Width - panel.Width) / 2;
-            int y = (this.ClientSize.Height - panel.Height) / 2;
+            int y = (this.ClientSize.Height - panel.Height) / 2 + 50;
 
             // Set the panel's location
             panel.Location = new Point(x, y);
@@ -55,8 +61,7 @@ namespace Sudoku_SPC
 
         private void InitializeLayout(int x, int y)
         {
-            y = (this.ClientSize.Height-panelSudoku.Height-20);
-            btnSolvePuzzle.Location = new Point(x, 50);
+            btnSolvePuzzle.Location = new Point(x, y-100);
         }
 
         private void InitializeSudokuGrid()
@@ -67,6 +72,7 @@ namespace Sudoku_SPC
 
             int offset = lengthOfSquare;
             int borderRow = 0;
+            cells = new RichTextBox[lengthOfSquare * lengthOfSquare][];
             for (int i = 0; i< lengthOfSquare*lengthOfSquare;i+=offset)
             {
                 borderRow += i % lengthOfSquare == 0 ? (i == 0 ? 2 : 1) * padding : 0;
@@ -82,6 +88,7 @@ namespace Sudoku_SPC
             for (int i = offset; i < lengthOfSquare+offset; i++)
             {
                 int borderColumn = 0;
+                cells[i] = new RichTextBox[lengthOfSquare * lengthOfSquare];
                 for (int j = 0; j < lengthOfSquare* lengthOfSquare; j++)
                 {
                     borderColumn += j% lengthOfSquare == 0 ? (j==0?2:1)*padding : 0;
@@ -105,6 +112,7 @@ namespace Sudoku_SPC
                         RichTextBox rtb = (RichTextBox)sender;
                         Validator.ProcessNewInput(rtb);
                     };
+                    cells[i][j] = richTextBox;
                     this.panelSudoku.Controls.Add(richTextBox);
                 }
             }
@@ -114,17 +122,12 @@ namespace Sudoku_SPC
         {
             try
             {
-                int i = 0;
-                int j = 0;
-                foreach (var txtBox in GetAllRichTextBoxes())
+                for (int i = 0; i < cells.Length; i++)
                 {
-                    if (j >= lengthOfSquare * lengthOfSquare)
+                    for (int j = 0; j < cells[i].Length; j++)
                     {
-                        ++i;
-                        j = 0;
+                        cells[i][j].Text = sudokuSolver.GetValue(i, j).ToString();
                     }
-                    txtBox.Text = sudokuSolver.GetValue(i, j).ToString();
-                    ++j;
                 }
             }
             catch (Exception ex)
@@ -164,21 +167,32 @@ namespace Sudoku_SPC
             }
         }
 
-        private List<RichTextBox> GetAllRichTextBoxes()
+        private void btnSolvePuzzle_Click(object sender, EventArgs e)
         {
-            List<RichTextBox> richTextBoxes = new List<RichTextBox>();
-
-            // Iterate over all controls in the panel
-            foreach (Control control in panelSudoku.Controls)
+            if(sudokuSolverTask?.IsCompleted ?? true)
             {
-                // Check if the control is a RichTextBox
-                if (control is RichTextBox richTextBox)
-                {
-                    richTextBoxes.Add(richTextBox); // Add to the list
-                }
+                sudokuSolverTask = sudokuSolver.SolveSudokuAsync();
             }
+        }
 
-            return richTextBoxes;
+        private void SudokuSolver_GridChanged(object sender, SudokuCell e)
+        {
+            BeginInvoke(new Action(() => UpdateCell(e)));
+        }
+
+        private void SudokuSolver_SudokuSolved(object sender, EventArgs e)
+        {
+            MessageBox.Show("Sudoku solved :-)", string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void UpdateCell(SudokuCell updatedCell)
+        {
+            cells[updatedCell.Row][updatedCell.Column].Text = updatedCell.Value.ToString();
+        }
+
+        private void SudokuSolver_ExceptionThrown(object sender, Exception e)
+        {
+            MessageBox.Show("An error occurred while solving the puzzle: " + e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }
