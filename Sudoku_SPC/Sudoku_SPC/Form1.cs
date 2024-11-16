@@ -14,10 +14,10 @@ namespace Sudoku_SPC
 {
     public partial class Form1 : Form
     {
+        private int lengthOfSquare = 3;
         private int widthField = 60;
         private int heightField = 50;
         private int padding = 2;
-        private int lengthOfSquare = 3;
 
         public Form1()
         {
@@ -62,7 +62,7 @@ namespace Sudoku_SPC
             int borderRow = offset;
             for (int i = offset; i < lengthOfSquare+offset; i++)
             {
-                borderRow += i % lengthOfSquare == 0 ? (i == offset ? 2 : 1) * padding : 0;
+                borderRow += i % lengthOfSquare == 0 ? (i == 0 ? 2 : 1 * padding) : 0;
                 int borderColumn = 0;
                 for (int j = 0; j < lengthOfSquare* lengthOfSquare; j++)
                 {
