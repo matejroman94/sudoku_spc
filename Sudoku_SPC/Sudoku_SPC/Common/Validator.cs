@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,13 +10,14 @@ namespace Sudoku_SPC.Common
 {
     public static class Validator
     {
-        public static bool IsValidNumber(string input)
+
+        public static bool IsValidNumberAndNotZero(string input)
         {
-            foreach(char c in input)
+            if (int.TryParse(input, out int num))
             {
-                if (char.IsDigit(c) is false) return false;
+                if (num != 0) return true;
             }
-            return true;
+            return false;
         }
 
         public static void ProcessNewInput(RichTextBox rtb)
@@ -25,7 +27,7 @@ namespace Sudoku_SPC.Common
                 if (rtb.SelectionStart == 2)
                 {
                     string newInput = rtb.Text.Substring(1, 1);
-                    if (IsValidNumber(newInput))
+                    if (IsValidNumberAndNotZero(newInput))
                     {
                         rtb.Text = newInput;
                     }
@@ -34,7 +36,7 @@ namespace Sudoku_SPC.Common
                 else
                 {
                     string newInput = rtb.Text.Substring(0, 1);
-                    if (IsValidNumber(newInput))
+                    if (IsValidNumberAndNotZero(newInput))
                     {
                         rtb.Text = newInput;
                     }
@@ -43,7 +45,7 @@ namespace Sudoku_SPC.Common
             }
             else
             {
-                if (IsValidNumber(rtb.Text) is false)
+                if (IsValidNumberAndNotZero(rtb.Text) is false)
                 {
                     rtb.Text = string.Empty;
                 }

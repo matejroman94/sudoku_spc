@@ -21,16 +21,18 @@ namespace Sudoku_SPC
         private int padding = 2;
 
         private SudokuSolver sudokuSolver;
+        private Task sudokuSolverTask = null;
         public Form1()
         {
             InitializeComponent();
-            InitializeSudokuMatrix();
-            this.CenterToScreen();
+
+            InitializeSudokuGrid();
+            CenterToScreen();
 
             sudokuSolver = new SudokuSolver(lengthOfSquare*lengthOfSquare);
 
 #if DEBUG
-            sudokuSolver.FillMatrixFromFile("sudoku.txt");
+            sudokuSolver.FillGridFromFile("sudoku.txt");
             DisplayValues();
 #endif
         }
@@ -48,9 +50,16 @@ namespace Sudoku_SPC
 
             // Set the panel's location
             panel.Location = new Point(x, y);
+            InitializeLayout(x,y);
         }
 
-        private void InitializeSudokuMatrix()
+        private void InitializeLayout(int x, int y)
+        {
+            y = (this.ClientSize.Height-panelSudoku.Height-20);
+            btnSolvePuzzle.Location = new Point(x, 50);
+        }
+
+        private void InitializeSudokuGrid()
         {
             panelSudoku.Size = new Size();
             panelSudoku.Margin = new Padding(100);
@@ -61,14 +70,14 @@ namespace Sudoku_SPC
             for (int i = 0; i< lengthOfSquare*lengthOfSquare;i+=offset)
             {
                 borderRow += i % lengthOfSquare == 0 ? (i == 0 ? 2 : 1) * padding : 0;
-                CreateSquare(i, borderRow);
+                CreateBox(i, borderRow);
             }
             CenterPanel(panelSudoku);
         }
 
 
 
-        private void CreateSquare(int offset,int borderRow)
+        private void CreateBox(int offset,int borderRow)
         {
             for (int i = offset; i < lengthOfSquare+offset; i++)
             {
@@ -139,7 +148,7 @@ namespace Sudoku_SPC
                         // Read the file contents
                         try
                         {
-                            sudokuSolver.FillMatrixFromFile(filePath);
+                            sudokuSolver.FillGridFromFile(filePath);
                             DisplayValues();
                         }
                         catch (Exception ex)

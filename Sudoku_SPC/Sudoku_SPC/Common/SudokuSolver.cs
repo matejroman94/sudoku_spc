@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -10,8 +11,10 @@ namespace Sudoku_SPC.Common
 {
     public class SudokuSolver
     {
+        public event EventHandler<Point> GridChanged;
+
         private int size = 0;
-        private int[][] matrix;
+        private int[][] grid;
 
         /// <summary>
         /// Initializes a new instance of the SudokuSolver class with the specified grid size.
@@ -20,15 +23,15 @@ namespace Sudoku_SPC.Common
         public SudokuSolver(int size)
         {
             this.size = size;
-            InitializeMatrix(size);
+            InitializeGrid(size);
         }
 
         public int GetValue(int row, int column)
         {
-            return matrix[row][column];
+            return grid[row][column];
         }
 
-        public void FillMatrixFromFile(string gameFilePath)
+        public void FillGridFromFile(string gameFilePath)
         {
             if (File.Exists(gameFilePath))
             {
@@ -43,7 +46,7 @@ namespace Sudoku_SPC.Common
                     if(chars.Length != size) { throw new Exception($"Expected { size } values per line, but found { chars.Length} in line: \"{line}\"."); }
                     foreach(string c in chars)
                     {
-                        matrix[i][j] = int.Parse(c);
+                        grid[i][j] = int.Parse(c);
                         ++j;
                     }
                     ++i;
@@ -55,13 +58,26 @@ namespace Sudoku_SPC.Common
             }
         }
 
-        private void InitializeMatrix(int size)
+        public async Task SolveSudokuAsync()
         {
-            matrix = new int[size][];
+            await Task.Run(() =>
+            {
+                solving();
+            });
+        }
+        
+        private void InitializeGrid(int size)
+        {
+            grid = new int[size][];
             for (int i = 0; i < size; i++)
             {
-                matrix[i] = new int[size];
+                grid[i] = new int[size];
             }
+        }
+
+        private void solving()
+        {
+
         }
     }
 }

@@ -43,6 +43,7 @@
             this.expertToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panelSudoku = new System.Windows.Forms.Panel();
+            this.btnSolvePuzzle = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -79,7 +80,7 @@
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
@@ -154,18 +155,28 @@
             // 
             this.panelSudoku.AutoSize = true;
             this.panelSudoku.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.panelSudoku.Location = new System.Drawing.Point(29, 44);
+            this.panelSudoku.Location = new System.Drawing.Point(29, 73);
             this.panelSudoku.Margin = new System.Windows.Forms.Padding(20);
             this.panelSudoku.Name = "panelSudoku";
             this.panelSudoku.Size = new System.Drawing.Size(486, 378);
             this.panelSudoku.TabIndex = 1;
+            // 
+            // btnSolvePuzzle
+            // 
+            this.btnSolvePuzzle.Location = new System.Drawing.Point(48, 38);
+            this.btnSolvePuzzle.Name = "btnSolvePuzzle";
+            this.btnSolvePuzzle.Size = new System.Drawing.Size(75, 23);
+            this.btnSolvePuzzle.TabIndex = 2;
+            this.btnSolvePuzzle.Text = "Solve puzzle";
+            this.btnSolvePuzzle.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(544, 451);
+            this.ClientSize = new System.Drawing.Size(544, 487);
+            this.Controls.Add(this.btnSolvePuzzle);
             this.Controls.Add(this.panelSudoku);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
@@ -195,6 +206,7 @@
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem expertToolStripMenuItem;
         private System.Windows.Forms.Panel panelSudoku;
+        private System.Windows.Forms.Button btnSolvePuzzle;
     }
 }
 
