@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms.VisualStyles;
 
 namespace Sudoku_SPC.Common
 {
@@ -22,11 +23,31 @@ namespace Sudoku_SPC.Common
             InitializeMatrix(size);
         }
 
+        public int GetValue(int row, int column)
+        {
+            return matrix[row][column];
+        }
+
         public void FillMatrixFromFile(string gameFilePath)
         {
             if (File.Exists(gameFilePath))
             {
+                string[] lines = File.ReadAllLines(gameFilePath);
+                if(lines.Length != size) { throw new Exception($"Expected {size} lines, but found {lines.Length} lines in the file: {gameFilePath}."); }
 
+                int i = 0, j = 0;
+                foreach (var line in lines)
+                {
+                    j = 0;
+                    string[] chars = line.Split(',');
+                    if(chars.Length != size) { throw new Exception($"Expected { size } values per line, but found { chars.Length} in line: \"{line}\"."); }
+                    foreach(string c in chars)
+                    {
+                        matrix[i][j] = int.Parse(c);
+                        ++j;
+                    }
+                    ++i;
+                }
             }
             else
             {

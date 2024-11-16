@@ -28,6 +28,11 @@ namespace Sudoku_SPC
             this.CenterToScreen();
 
             sudokuSolver = new SudokuSolver(lengthOfSquare*lengthOfSquare);
+
+#if DEBUG
+            sudokuSolver.FillMatrixFromFile("sudoku.txt");
+            DisplayValues();
+#endif
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -96,28 +101,75 @@ namespace Sudoku_SPC
             }
         }
 
+        private void DisplayValues()
+        {
+            try
+            {
+                int i = 0;
+                int j = 0;
+                foreach (var txtBox in GetAllRichTextBoxes())
+                {
+                    if (j >= lengthOfSquare * lengthOfSquare)
+                    {
+                        ++i;
+                        j = 0;
+                    }
+                    txtBox.Text = sudokuSolver.GetValue(i, j).ToString();
+                    ++j;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("An error occurred while displaying values: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            try
             {
-                openFileDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
-                openFileDialog.Title = "Select a Text File";
-
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                using (OpenFileDialog openFileDialog = new OpenFileDialog())
                 {
-                    string filePath = openFileDialog.FileName;
-                    // Read the file contents
-                    try
+                    openFileDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
+                    openFileDialog.Title = "Select a Text File";
+
+                    if (openFileDialog.ShowDialog() == DialogResult.OK)
                     {
-                        string fileContent = File.ReadAllText(filePath);
-                        contentTextBox.Text = fileContent; // Display contents in the TextBox
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Error reading file: " + ex.Message);
+                        string filePath = openFileDialog.FileName;
+                        // Read the file contents
+                        try
+                        {
+                            sudokuSolver.FillMatrixFromFile(filePath);
+                            DisplayValues();
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Error reading file: " + ex.Message);
+                        }
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show("An error occurred while opening the file: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private List<RichTextBox> GetAllRichTextBoxes()
+        {
+            List<RichTextBox> richTextBoxes = new List<RichTextBox>();
+
+            // Iterate over all controls in the panel
+            foreach (Control control in panelSudoku.Controls)
+            {
+                // Check if the control is a RichTextBox
+                if (control is RichTextBox richTextBox)
+                {
+                    richTextBoxes.Add(richTextBox); // Add to the list
+                }
+            }
+
+            return richTextBoxes;
         }
     }
 }
