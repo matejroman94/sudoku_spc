@@ -54,7 +54,7 @@
             this.aboutToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(534, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(544, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -159,7 +159,7 @@
             this.panelSudoku.Location = new System.Drawing.Point(29, 44);
             this.panelSudoku.Margin = new System.Windows.Forms.Padding(20);
             this.panelSudoku.Name = "panelSudoku";
-            this.panelSudoku.Size = new System.Drawing.Size(476, 377);
+            this.panelSudoku.Size = new System.Drawing.Size(486, 378);
             this.panelSudoku.TabIndex = 1;
             // 
             // Form1
@@ -167,11 +167,11 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(534, 450);
+            this.ClientSize = new System.Drawing.Size(544, 451);
             this.Controls.Add(this.panelSudoku);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.MaximumSize = new System.Drawing.Size(620, 650);
+            this.MaximumSize = new System.Drawing.Size(650, 600);
             this.Name = "Form1";
             this.Text = "Form1";
             this.menuStrip1.ResumeLayout(false);

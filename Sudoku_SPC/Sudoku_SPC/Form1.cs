@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -15,7 +16,7 @@ namespace Sudoku_SPC
         private int widthField = 60;
         private int heightField = 50;
         private int padding = 2;
-        private int lengthOfSquare = 2;
+        private int lengthOfSquare = 3;
 
         public Form1()
         {
@@ -46,18 +47,20 @@ namespace Sudoku_SPC
         {
             for (int i = offset; i < lengthOfSquare+offset; i++)
             {
+                int border = 0;
                 for (int j = 0; j < lengthOfSquare* lengthOfSquare; j++)
                 {
+                    border += j% lengthOfSquare == 0 ? 2*padding : 0;
                     RichTextBox richTextBox = new RichTextBox
                     {
-                        Margin = new Padding(2 * padding),
+                        Margin = new Padding(2*padding),
                         Padding = new Padding(),
                         Width = widthField,
                         Height = heightField,
                         Multiline = false,
                         Text = $"{i}",
                         Location = new System.Drawing.Point(
-                            j * (widthField + padding) + (2 * padding),
+                            j * (widthField + padding) + (border),
                             i * (heightField + padding) + (2 * padding)),
                         BorderStyle = BorderStyle.None,
                         SelectionAlignment = HorizontalAlignment.Center,
