@@ -16,6 +16,8 @@ namespace Sudoku_SPC.Common
         public event EventHandler SudokuSolved;
         public event EventHandler<Exception> ExceptionThrown;
 
+        private static int n = 0;
+
         private int size = 0;
         private int[][] grid;
 
