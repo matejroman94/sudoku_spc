@@ -30,8 +30,9 @@ namespace Sudoku_SPC
         
         private void InitializeSudokuMatrix()
         {
-            int rows = 9;
-            int columns = 9;
+            panelSudoku.Size = new Size();
+            int rows = 1;
+            int columns = 2;
             for (int i = 0; i < rows; i++)
             {
                 for (int j = 0; j < columns; j++)
@@ -48,10 +49,6 @@ namespace Sudoku_SPC
                         BorderStyle = BorderStyle.None,
                         SelectionAlignment = HorizontalAlignment.Center,
                         Font = new System.Drawing.Font("Microsoft Sans Serif", 25.0f)
-                    };
-                    richTextBox.Paint += (sender, e) =>
-                    {
-                        DrawCustomBorder(e.Graphics, richTextBox);
                     };
                     richTextBox.TextChanged += (sender, e) =>
                     {
@@ -72,16 +69,6 @@ namespace Sudoku_SPC
                     };
                     this.panelSudoku.Controls.Add(richTextBox);
                 }
-            }
-        }
-        private void DrawCustomBorder(Graphics g, RichTextBox box)
-        {
-            using (Pen pen = new Pen(Color.Black, 2)) // Bold line with thickness of 2
-            {
-                // Draw top border
-                g.DrawLine(pen, 0, 0, box.Width, 0);
-                // Draw left border
-                g.DrawLine(pen, 0, 0, 0, box.Height);
             }
         }
     }
