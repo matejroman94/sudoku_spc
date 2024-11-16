@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms.VisualStyles;
 
@@ -78,26 +79,26 @@ namespace Sudoku_SPC.Common
             }
         }
 
-        private void solving()
+        private bool solving()
         {
             for (int i = 0; i < grid.Length; i++)
             {
                 for (int j = 0; j < grid[i].Length; j++)
                 {
                     if (grid[i][j] != 0) continue;
-                    SetCell(i,j);
+                    if (SetCell(i, j) is false) return false;
                 }
             }
+            return true;
         }
 
-        private void SetCell(int row, int column)
+        private bool SetCell(int row, int column)
         {
             int[] numbers = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
             for (int attempt = 0; attempt < numbers.Length; attempt++)
             {
                 if (CheckGrid(row,column, numbers[attempt]))
                 {
-                    // recursive
                     SetCellValue(row, column, numbers[attempt]);
                     solving();
                     break;
