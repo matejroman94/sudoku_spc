@@ -113,6 +113,7 @@ namespace Sudoku_SPC.Common
                     SetCellValue(row, column, numbers[attempt]);
                     if (solving() is false)
                     {
+                        if(attempt != 8)
                         SetCellValue(row, column, 0);
                     }
                     else
