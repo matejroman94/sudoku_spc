@@ -50,19 +50,21 @@ namespace Sudoku_SPC
             panelSudoku.Padding = new Padding();
 
             int offset = lengthOfSquare;
-            for(int i = 0; i< lengthOfSquare*lengthOfSquare;i+=offset)
+            int borderRow = 0;
+            for (int i = 0; i< lengthOfSquare*lengthOfSquare;i+=offset)
             {
-                CreateSquare(i);
+                borderRow += i % lengthOfSquare == 0 ? (i == 0 ? 2 : 1) * padding : 0;
+                CreateSquare(i, borderRow);
             }
             CenterPanel(panelSudoku);
         }
 
-        private void CreateSquare(int offset)
+
+
+        private void CreateSquare(int offset,int borderRow)
         {
-            int borderRow = offset;
             for (int i = offset; i < lengthOfSquare+offset; i++)
             {
-                borderRow += i % lengthOfSquare == 0 ? (i == 0 ? 2 : 1 * padding) : 0;
                 int borderColumn = 0;
                 for (int j = 0; j < lengthOfSquare* lengthOfSquare; j++)
                 {
@@ -74,7 +76,7 @@ namespace Sudoku_SPC
                         Width = widthField,
                         Height = heightField,
                         Multiline = false,
-                        Text = $"{i}",
+                        Text = string.Empty,
                         Location = new System.Drawing.Point(
                             j * (widthField+ padding) + (borderColumn),
                             i * (heightField + padding) + (borderRow)),
