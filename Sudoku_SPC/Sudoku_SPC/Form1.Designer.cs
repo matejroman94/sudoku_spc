@@ -151,9 +151,6 @@
             // 
             // panelSudoku
             // 
-            this.panelSudoku.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.panelSudoku.AutoSize = true;
             this.panelSudoku.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.panelSudoku.Location = new System.Drawing.Point(29, 44);
@@ -171,7 +168,6 @@
             this.Controls.Add(this.panelSudoku);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.MaximumSize = new System.Drawing.Size(650, 600);
             this.Name = "Form1";
             this.Text = "Form1";
             this.menuStrip1.ResumeLayout(false);

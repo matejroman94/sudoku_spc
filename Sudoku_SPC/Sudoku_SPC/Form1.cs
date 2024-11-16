@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Sudoku_SPC.Common;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -23,17 +24,29 @@ namespace Sudoku_SPC
             InitializeComponent();
 
             InitializeSudokuMatrix();
+
+            this.CenterToScreen();
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Close();
         }
-        
+
+        private void CenterPanel(Panel panel)
+        {
+            // Calculate the center position
+            int x = (this.ClientSize.Width - panel.Width) / 2;
+            int y = (this.ClientSize.Height - panel.Height) / 2;
+
+            // Set the panel's location
+            panel.Location = new Point(x, y);
+        }
+
         private void InitializeSudokuMatrix()
         {
             panelSudoku.Size = new Size();
-            panelSudoku.Margin = new Padding();
+            panelSudoku.Margin = new Padding(100);
             panelSudoku.Padding = new Padding();
 
             int offset = lengthOfSquare;
@@ -41,16 +54,19 @@ namespace Sudoku_SPC
             {
                 CreateSquare(i);
             }
+            CenterPanel(panelSudoku);
         }
 
         private void CreateSquare(int offset)
         {
+            int borderRow = offset;
             for (int i = offset; i < lengthOfSquare+offset; i++)
             {
-                int border = 0;
+                borderRow += i % lengthOfSquare == 0 ? (i == offset ? 2 : 1) * padding : 0;
+                int borderColumn = 0;
                 for (int j = 0; j < lengthOfSquare* lengthOfSquare; j++)
                 {
-                    border += j% lengthOfSquare == 0 ? 2*padding : 0;
+                    borderColumn += j% lengthOfSquare == 0 ? (j==0?2:1)*padding : 0;
                     RichTextBox richTextBox = new RichTextBox
                     {
                         Margin = new Padding(2*padding),
@@ -60,8 +76,8 @@ namespace Sudoku_SPC
                         Multiline = false,
                         Text = $"{i}",
                         Location = new System.Drawing.Point(
-                            j * (widthField + padding) + (border),
-                            i * (heightField + padding) + (2 * padding)),
+                            j * (widthField+ padding) + (borderColumn),
+                            i * (heightField + padding) + (borderRow)),
                         BorderStyle = BorderStyle.None,
                         SelectionAlignment = HorizontalAlignment.Center,
                         Font = new System.Drawing.Font("Microsoft Sans Serif", 25.0f)
@@ -69,19 +85,7 @@ namespace Sudoku_SPC
                     richTextBox.TextChanged += (sender, e) =>
                     {
                         RichTextBox rtb = (RichTextBox)sender;
-                        if (rtb.Text.Length > 1)
-                        {
-                            if (rtb.SelectionStart == 2)
-                            {
-                                rtb.Text = rtb.Text.Substring(1, 1);
-                            }
-                            else
-                            {
-                                rtb.Text = rtb.Text.Substring(0, 1);
-                            }
-                            rtb.SelectionAlignment = HorizontalAlignment.Center;
-                            rtb.SelectionStart = 1; // Ensure cursor remains after the character
-                        }
+                        Validator.ProcessNewInput(rtb);
                     };
                     this.panelSudoku.Controls.Add(richTextBox);
                 }
