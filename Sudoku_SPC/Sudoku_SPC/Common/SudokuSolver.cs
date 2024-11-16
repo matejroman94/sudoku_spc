@@ -63,11 +63,22 @@ namespace Sudoku_SPC.Common
 
         public async Task SolveSudokuAsync()
         {
-            await Task.Run(() =>
+            try
             {
-                solving();
-                SudokuSolved?.Invoke(this, EventArgs.Empty);
-            });
+                await Task.Run(() =>
+                    {
+                        if (solving())
+                            SudokuSolved?.Invoke(this, EventArgs.Empty);
+                        else
+                        {
+                            throw new Exception("Cannot solve the Sudoku puzzle.");
+                        }
+                    });
+            }
+            catch (Exception ex)
+            {
+                ExceptionThrown?.Invoke(this, ex);
+            }
         }
         
         private void InitializeGrid(int size)
@@ -97,13 +108,20 @@ namespace Sudoku_SPC.Common
             int[] numbers = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
             for (int attempt = 0; attempt < numbers.Length; attempt++)
             {
-                if (CheckGrid(row,column, numbers[attempt]))
+                if (CheckGrid(row,column,numbers[attempt]))
                 {
                     SetCellValue(row, column, numbers[attempt]);
-                    solving();
-                    break;
+                    if (solving() is false)
+                    {
+                        SetCellValue(row, column, 0);
+                    }
+                    else
+                    {
+                        return true;
+                    }
                 }
             }
+            return false;
         }
 
         private bool CheckGrid(int row, int column, int newValue)
