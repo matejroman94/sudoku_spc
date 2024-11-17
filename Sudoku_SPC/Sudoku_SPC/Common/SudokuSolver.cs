@@ -158,7 +158,10 @@ namespace Sudoku_SPC.Common
         {
             grid[row][column] = value;
             GridChanged?.Invoke(this, new SudokuCell { Row = row, Column = column, Value = value });
-            if (VisualizationEnabled) Thread.Sleep(1);
+            if (VisualizationEnabled)
+            {
+                Thread.Sleep(1);
+            }
         }
     }
 

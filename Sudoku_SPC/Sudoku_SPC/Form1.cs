@@ -174,15 +174,15 @@ namespace Sudoku_SPC
         {
             if(sudokuSolverTask?.IsCompleted ?? true)
             {
+                ChangeSolverButtonText("Stop");
                 cancellationTokenSource = new CancellationTokenSource();
                 CancellationToken token = cancellationTokenSource.Token;
                 sudokuSolverTask = sudokuSolver.SolveSudokuAsync(token);
-                ChangeTextSolverButtonText("Stop");
             }
             else
             {
                 cancellationTokenSource?.Cancel();
-                ChangeTextSolverButtonText("Solve puzzle");
+                ChangeSolverButtonText("Solve puzzle");
             }
         }
 
@@ -193,7 +193,7 @@ namespace Sudoku_SPC
 
         private void SudokuSolver_SudokuSolved(object sender, EventArgs e)
         {
-            ChangeTextSolverButtonText("Solve puzzle");
+            ChangeSolverButtonText("Solve puzzle");
             MessageBox.Show("Sudoku solved :-)", string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
@@ -204,7 +204,7 @@ namespace Sudoku_SPC
 
         private void SudokuSolver_ExceptionThrown(object sender, Exception e)
         {
-            ChangeTextSolverButtonText("Solve puzzle");
+            ChangeSolverButtonText("Solve puzzle");
             MessageBox.Show(e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
@@ -213,7 +213,7 @@ namespace Sudoku_SPC
             sudokuSolver.VisualizationEnabled = cbVisualization.Checked;
         }
 
-        private void ChangeTextSolverButtonText(string text)
+        private void ChangeSolverButtonText(string text)
         {
             BeginInvoke(new Action(() =>
             {
