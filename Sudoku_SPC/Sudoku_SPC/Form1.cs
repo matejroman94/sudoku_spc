@@ -8,21 +8,24 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Net.Mime.MediaTypeNames;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Sudoku_SPC
 {
     public partial class Form1 : Form
     {
-        private int lengthOfSquare = 3;
+        private int lengthOfBox = 3;
         private int widthField = 60;
         private int heightField = 50;
         private int padding = 2;
 
         private SudokuSolver sudokuSolver;
         private Task sudokuSolverTask = null;
+        private CancellationTokenSource cancellationTokenSource;
 
         private RichTextBox[][] cells = null;
         public Form1()
@@ -32,7 +35,7 @@ namespace Sudoku_SPC
             InitializeSudokuGrid();
             CenterToScreen();
 
-            sudokuSolver = new SudokuSolver(lengthOfSquare*lengthOfSquare);
+            sudokuSolver = new SudokuSolver(lengthOfBox*lengthOfBox);
             sudokuSolver.GridChanged += SudokuSolver_GridChanged;
             sudokuSolver.SudokuSolved += SudokuSolver_SudokuSolved;
             sudokuSolver.ExceptionThrown += SudokuSolver_ExceptionThrown;
@@ -70,12 +73,12 @@ namespace Sudoku_SPC
             panelSudoku.Margin = new Padding(100);
             panelSudoku.Padding = new Padding();
 
-            int offset = lengthOfSquare;
+            int offset = lengthOfBox;
             int borderRow = 0;
-            cells = new RichTextBox[lengthOfSquare * lengthOfSquare][];
-            for (int i = 0; i< lengthOfSquare*lengthOfSquare;i+=offset)
+            cells = new RichTextBox[lengthOfBox * lengthOfBox][];
+            for (int i = 0; i< lengthOfBox*lengthOfBox;i+=offset)
             {
-                borderRow += i % lengthOfSquare == 0 ? (i == 0 ? 2 : 1) * padding : 0;
+                borderRow += i % lengthOfBox == 0 ? (i == 0 ? 2 : 1) * padding : 0;
                 CreateBox(i, borderRow);
             }
             CenterPanel(panelSudoku);
@@ -85,13 +88,13 @@ namespace Sudoku_SPC
 
         private void CreateBox(int offset,int borderRow)
         {
-            for (int i = offset; i < lengthOfSquare+offset; i++)
+            for (int i = offset; i < lengthOfBox+offset; i++)
             {
                 int borderColumn = 0;
-                cells[i] = new RichTextBox[lengthOfSquare * lengthOfSquare];
-                for (int j = 0; j < lengthOfSquare* lengthOfSquare; j++)
+                cells[i] = new RichTextBox[lengthOfBox * lengthOfBox];
+                for (int j = 0; j < lengthOfBox* lengthOfBox; j++)
                 {
-                    borderColumn += j% lengthOfSquare == 0 ? (j==0?2:1)*padding : 0;
+                    borderColumn += j% lengthOfBox == 0 ? (j==0?2:1)*padding : 0;
                     RichTextBox richTextBox = new RichTextBox
                     {
                         Margin = new Padding(2*padding),
@@ -171,7 +174,15 @@ namespace Sudoku_SPC
         {
             if(sudokuSolverTask?.IsCompleted ?? true)
             {
-                sudokuSolverTask = sudokuSolver.SolveSudokuAsync();
+                cancellationTokenSource = new CancellationTokenSource();
+                CancellationToken token = cancellationTokenSource.Token;
+                sudokuSolverTask = sudokuSolver.SolveSudokuAsync(token);
+                ChangeTextSolverButtonText("Stop");
+            }
+            else
+            {
+                cancellationTokenSource?.Cancel();
+                ChangeTextSolverButtonText("Solve puzzle");
             }
         }
 
@@ -182,6 +193,7 @@ namespace Sudoku_SPC
 
         private void SudokuSolver_SudokuSolved(object sender, EventArgs e)
         {
+            ChangeTextSolverButtonText("Solve puzzle");
             MessageBox.Show("Sudoku solved :-)", string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
@@ -192,7 +204,21 @@ namespace Sudoku_SPC
 
         private void SudokuSolver_ExceptionThrown(object sender, Exception e)
         {
+            ChangeTextSolverButtonText("Solve puzzle");
             MessageBox.Show(e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        private void cbVisualization_CheckedChanged(object sender, EventArgs e)
+        {
+            sudokuSolver.VisualizationEnabled = cbVisualization.Checked;
+        }
+
+        private void ChangeTextSolverButtonText(string text)
+        {
+            BeginInvoke(new Action(() =>
+            {
+                btnSolvePuzzle.Text = text;
+            }));
         }
     }
 }

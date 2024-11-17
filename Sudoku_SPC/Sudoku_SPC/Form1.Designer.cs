@@ -44,7 +44,7 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panelSudoku = new System.Windows.Forms.Panel();
             this.btnSolvePuzzle = new System.Windows.Forms.Button();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.cbVisualization = new System.Windows.Forms.CheckBox();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -167,7 +167,7 @@
             // 
             this.btnSolvePuzzle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSolvePuzzle.Location = new System.Drawing.Point(64, 47);
-            this.btnSolvePuzzle.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnSolvePuzzle.Margin = new System.Windows.Forms.Padding(4);
             this.btnSolvePuzzle.Name = "btnSolvePuzzle";
             this.btnSolvePuzzle.Size = new System.Drawing.Size(200, 43);
             this.btnSolvePuzzle.TabIndex = 2;
@@ -175,15 +175,16 @@
             this.btnSolvePuzzle.UseVisualStyleBackColor = true;
             this.btnSolvePuzzle.Click += new System.EventHandler(this.btnSolvePuzzle_Click);
             // 
-            // checkBox1
+            // cbVisualization
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(288, 47);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(95, 20);
-            this.checkBox1.TabIndex = 3;
-            this.checkBox1.Text = "checkBox1";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.cbVisualization.AutoSize = true;
+            this.cbVisualization.Location = new System.Drawing.Point(315, 47);
+            this.cbVisualization.Name = "cbVisualization";
+            this.cbVisualization.Size = new System.Drawing.Size(104, 20);
+            this.cbVisualization.TabIndex = 3;
+            this.cbVisualization.Text = "Visualization";
+            this.cbVisualization.UseVisualStyleBackColor = true;
+            this.cbVisualization.CheckedChanged += new System.EventHandler(this.cbVisualization_CheckedChanged);
             // 
             // Form1
             // 
@@ -191,12 +192,12 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(725, 599);
-            this.Controls.Add(this.checkBox1);
+            this.Controls.Add(this.cbVisualization);
             this.Controls.Add(this.btnSolvePuzzle);
             this.Controls.Add(this.panelSudoku);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form1";
             this.Text = "Form1";
             this.menuStrip1.ResumeLayout(false);
@@ -224,7 +225,7 @@
         private System.Windows.Forms.ToolStripMenuItem expertToolStripMenuItem;
         private System.Windows.Forms.Panel panelSudoku;
         private System.Windows.Forms.Button btnSolvePuzzle;
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox cbVisualization;
     }
 }
 

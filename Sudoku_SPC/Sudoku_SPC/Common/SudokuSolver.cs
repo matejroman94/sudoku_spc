@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 
 namespace Sudoku_SPC.Common
@@ -15,6 +16,8 @@ namespace Sudoku_SPC.Common
         public event EventHandler<SudokuCell> GridChanged;
         public event EventHandler SudokuSolved;
         public event EventHandler<Exception> ExceptionThrown;
+
+        public bool VisualizationEnabled { get; set; }
 
         private int size = 0;
         private int[][] grid;
@@ -61,19 +64,23 @@ namespace Sudoku_SPC.Common
             }
         }
 
-        public async Task SolveSudokuAsync()
+        public async Task SolveSudokuAsync(CancellationToken token)
         {
             try
             {
                 await Task.Run(() =>
                     {
-                        if (solving())
+                        if (solving(token))
                             SudokuSolved?.Invoke(this, EventArgs.Empty);
                         else
                         {
                             throw new Exception("Cannot solve the Sudoku puzzle.");
                         }
                     });
+            }
+            catch (OperationCanceledException)
+            {
+                throw new Exception("Operation was canceled.");
             }
             catch (Exception ex)
             {
@@ -90,20 +97,21 @@ namespace Sudoku_SPC.Common
             }
         }
 
-        private bool solving()
+        private bool solving(CancellationToken token)
         {
             for (int i = 0; i < grid.Length; i++)
             {
                 for (int j = 0; j < grid[i].Length; j++)
                 {
+                    token.ThrowIfCancellationRequested();
                     if (grid[i][j] != 0) continue;
-                    if (SetCell(i, j) is false) return false;
+                    if (SetCell(token,i, j) is false) return false;
                 }
             }
             return true;
         }
 
-        private bool SetCell(int row, int column)
+        private bool SetCell(CancellationToken token,int row, int column)
         {
             int[] numbers = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
             for (int attempt = 0; attempt < numbers.Length; attempt++)
@@ -111,7 +119,8 @@ namespace Sudoku_SPC.Common
                 if (CheckGrid(row,column,numbers[attempt]))
                 {
                     SetCellValue(row, column, numbers[attempt]);
-                    if (solving() is false)
+
+                    if (solving(token) is false)
                     {
                         SetCellValue(row, column, 0);
                     }
@@ -149,6 +158,7 @@ namespace Sudoku_SPC.Common
         {
             grid[row][column] = value;
             GridChanged?.Invoke(this, new SudokuCell { Row = row, Column = column, Value = value });
+            if (VisualizationEnabled) Thread.Sleep(1);
         }
     }
 
