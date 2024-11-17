@@ -32,6 +32,11 @@ namespace Sudoku_SPC.Common
             return grid[row][column];
         }
 
+        public void SetValue(int row, int column, int value)
+        {
+            grid[row][column] = value;
+        }
+
         public void FillGridFromFile(string gameFilePath)
         {
             if (File.Exists(gameFilePath))

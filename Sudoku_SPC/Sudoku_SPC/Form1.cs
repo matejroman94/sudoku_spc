@@ -112,6 +112,27 @@ namespace Sudoku_SPC
             }
         }
 
+        private void UpdateSudokuValues()
+        {
+            for (int i = 0; i < cells.Length; i++)
+            {
+                for (int j = 0; j < cells[i].Length; j++)
+                {
+                    if (string.IsNullOrWhiteSpace(cells[i][j].Text))
+                    {
+                        sudokuSolver.SetValue(i, j, 0);
+                    }
+                    else
+                    {
+                        if (int.TryParse(cells[i][j].Text, out int newValue))
+                        {
+                            sudokuSolver.SetValue(i, j, newValue);
+                        }
+                    }
+                }
+            }
+        }
+
         private void DisplayValues()
         {
             try
@@ -165,6 +186,7 @@ namespace Sudoku_SPC
         {
             if(sudokuSolverTask?.IsCompleted ?? true)
             {
+                UpdateSudokuValues();
                 ChangeSolverButtonText("Stop");
                 cancellationTokenSource = new CancellationTokenSource();
                 CancellationToken token = cancellationTokenSource.Token;
