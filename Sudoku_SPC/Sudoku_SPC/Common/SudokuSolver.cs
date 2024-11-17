@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Common;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -71,11 +72,14 @@ namespace Sudoku_SPC.Common
                 await Task.Run(() =>
                     {
                         if (solving(token))
-                            SudokuSolved?.Invoke(this, EventArgs.Empty);
-                        else
                         {
-                            throw new Exception("Cannot solve the Sudoku puzzle.");
+                            if (CheckGrid())
+                            {
+                                SudokuSolved?.Invoke(this, EventArgs.Empty);
+                                return;
+                            }
                         }
+                        throw new Exception("Cannot solve the Sudoku puzzle.");
                     });
             }
             catch (OperationCanceledException)
@@ -154,6 +158,25 @@ namespace Sudoku_SPC.Common
             return true;
         }
 
+        private bool CheckGrid()
+        {
+            int temp = 0;
+            for (int i = 0; i < grid.Length; i++)
+            {
+                for (int j = 0; j < grid[i].Length; j++)
+                {
+                    temp = grid[i][j];
+                    SetCellValue(i, j, 0);
+                    if (CheckGrid(i, j, temp) is false)
+                    {
+                        SetCellValue(i, j, temp);
+                        return false;
+                    }
+                    SetCellValue(i, j, temp);
+                }
+            }
+            return true;
+        }
         private void SetCellValue(int row, int column, int value)
         {
             grid[row][column] = value;

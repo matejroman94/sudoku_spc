@@ -1,6 +1,8 @@
 ﻿using Sudoku_SPC.Common;
 using System;
 using System.Drawing;
+using System.IO;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -19,6 +21,7 @@ namespace Sudoku_SPC
         private CancellationTokenSource cancellationTokenSource;
 
         private RichTextBox[][] cells = null;
+        private bool closingProcess = false;
         public Form1()
         {
             InitializeComponent();
@@ -37,118 +40,24 @@ namespace Sudoku_SPC
 #endif
         }
 
+        #region Event handlers
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (closingProcess) return;
+            if (SaveBeforeClose() is false)
+            {
+                e.Cancel = true; 
+            }
+        }
+
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (SaveBeforeClose() is false)
+            {
+                return; 
+            }
+            closingProcess = true;
             this.Close();
-        }
-
-        private void CenterPanel(Panel panel)
-        {
-            // Calculate the center position
-            int x = (this.ClientSize.Width - panel.Width) / 2;
-            int y = (this.ClientSize.Height - panel.Height) / 2 + 50;
-
-            // Set the panel's location
-            panel.Location = new Point(x, y);
-            InitializeLayout(x,y);
-        }
-
-        private void InitializeLayout(int x, int y)
-        {
-            btnSolvePuzzle.Location = new Point(x, y-100);
-        }
-
-        private void InitializeSudokuGrid()
-        {
-            panelSudoku.Size = new Size();
-            panelSudoku.Margin = new Padding(100);
-            panelSudoku.Padding = new Padding();
-
-            int offset = lengthOfBox;
-            int borderRow = 0;
-            cells = new RichTextBox[lengthOfBox * lengthOfBox][];
-            for (int i = 0; i< lengthOfBox*lengthOfBox;i+=offset)
-            {
-                borderRow += i % lengthOfBox == 0 ? (i == 0 ? 2 : 1) * padding : 0;
-                CreateBox(i, borderRow);
-            }
-            CenterPanel(panelSudoku);
-        }
-
-
-
-        private void CreateBox(int offset,int borderRow)
-        {
-            for (int i = offset; i < lengthOfBox+offset; i++)
-            {
-                int borderColumn = 0;
-                cells[i] = new RichTextBox[lengthOfBox * lengthOfBox];
-                for (int j = 0; j < lengthOfBox* lengthOfBox; j++)
-                {
-                    borderColumn += j% lengthOfBox == 0 ? (j==0?2:1)*padding : 0;
-                    RichTextBox richTextBox = new RichTextBox
-                    {
-                        Margin = new Padding(2*padding),
-                        Padding = new Padding(),
-                        Width = widthField,
-                        Height = heightField,
-                        Multiline = false,
-                        Text = string.Empty,
-                        Location = new System.Drawing.Point(
-                            j * (widthField+ padding) + (borderColumn),
-                            i * (heightField + padding) + (borderRow)),
-                        BorderStyle = BorderStyle.None,
-                        SelectionAlignment = HorizontalAlignment.Center,
-                        Font = new System.Drawing.Font("Microsoft Sans Serif", 25.0f)
-                    };
-                    richTextBox.TextChanged += (sender, e) =>
-                    {
-                        RichTextBox rtb = (RichTextBox)sender;
-                        Validator.ProcessNewInput(rtb);
-                    };
-                    cells[i][j] = richTextBox;
-                    this.panelSudoku.Controls.Add(richTextBox);
-                }
-            }
-        }
-
-        private void UpdateSudokuValues()
-        {
-            for (int i = 0; i < cells.Length; i++)
-            {
-                for (int j = 0; j < cells[i].Length; j++)
-                {
-                    if (string.IsNullOrWhiteSpace(cells[i][j].Text))
-                    {
-                        sudokuSolver.SetValue(i, j, 0);
-                    }
-                    else
-                    {
-                        if (int.TryParse(cells[i][j].Text, out int newValue))
-                        {
-                            sudokuSolver.SetValue(i, j, newValue);
-                        }
-                    }
-                }
-            }
-        }
-
-        private void DisplayValues()
-        {
-            try
-            {
-                for (int i = 0; i < cells.Length; i++)
-                {
-                    for (int j = 0; j < cells[i].Length; j++)
-                    {
-                        cells[i][j].Text = sudokuSolver.GetValue(i, j).ToString();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("An error occurred while displaying values: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -184,7 +93,7 @@ namespace Sudoku_SPC
 
         private void btnSolvePuzzle_Click(object sender, EventArgs e)
         {
-            if(sudokuSolverTask?.IsCompleted ?? true)
+            if (sudokuSolverTask?.IsCompleted ?? true)
             {
                 UpdateSudokuValues();
                 ChangeSolverButtonText("Stop");
@@ -210,11 +119,6 @@ namespace Sudoku_SPC
             MessageBox.Show("Sudoku solved :-)", string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void UpdateCell(SudokuCell updatedCell)
-        {
-            cells[updatedCell.Row][updatedCell.Column].Text = updatedCell.Value.ToString();
-        }
-
         private void SudokuSolver_ExceptionThrown(object sender, Exception e)
         {
             ChangeSolverButtonText("Solve puzzle");
@@ -225,6 +129,124 @@ namespace Sudoku_SPC
         {
             sudokuSolver.VisualizationEnabled = cbVisualization.Checked;
         }
+        #endregion Event handlers
+
+        #region Private layout methods
+        private void CenterPanel(Panel panel)
+        {
+            // Calculate the center position
+            int x = (this.ClientSize.Width - panel.Width) / 2;
+            int y = (this.ClientSize.Height - panel.Height) / 2 + 50;
+
+            // Set the panel's location
+            panel.Location = new Point(x, y);
+            InitializeLayout(x, y);
+        }
+
+        private void InitializeLayout(int x, int y)
+        {
+            btnSolvePuzzle.Location = new Point(x, y - 100);
+        }
+
+        private void InitializeSudokuGrid()
+        {
+            panelSudoku.Size = new Size();
+            panelSudoku.Margin = new Padding(100);
+            panelSudoku.Padding = new Padding();
+
+            int offset = lengthOfBox;
+            int borderRow = 0;
+            cells = new RichTextBox[lengthOfBox * lengthOfBox][];
+            for (int i = 0; i < lengthOfBox * lengthOfBox; i += offset)
+            {
+                borderRow += i % lengthOfBox == 0 ? (i == 0 ? 2 : 1) * padding : 0;
+                CreateBox(i, borderRow);
+            }
+            CenterPanel(panelSudoku);
+        }
+
+
+
+        private void CreateBox(int offset, int borderRow)
+        {
+            for (int i = offset; i < lengthOfBox + offset; i++)
+            {
+                int borderColumn = 0;
+                cells[i] = new RichTextBox[lengthOfBox * lengthOfBox];
+                for (int j = 0; j < lengthOfBox * lengthOfBox; j++)
+                {
+                    borderColumn += j % lengthOfBox == 0 ? (j == 0 ? 2 : 1) * padding : 0;
+                    RichTextBox richTextBox = new RichTextBox
+                    {
+                        Margin = new Padding(2 * padding),
+                        Padding = new Padding(),
+                        Width = widthField,
+                        Height = heightField,
+                        Multiline = false,
+                        Text = string.Empty,
+                        Location = new System.Drawing.Point(
+                            j * (widthField + padding) + (borderColumn),
+                            i * (heightField + padding) + (borderRow)),
+                        BorderStyle = BorderStyle.None,
+                        SelectionAlignment = HorizontalAlignment.Center,
+                        Font = new System.Drawing.Font("Microsoft Sans Serif", 25.0f)
+                    };
+                    richTextBox.TextChanged += (sender, e) =>
+                    {
+                        RichTextBox rtb = (RichTextBox)sender;
+                        Validator.ProcessNewInput(rtb);
+                    };
+                    cells[i][j] = richTextBox;
+                    this.panelSudoku.Controls.Add(richTextBox);
+                }
+            }
+        }
+
+        private void DisplayValues()
+        {
+            try
+            {
+                for (int i = 0; i < cells.Length; i++)
+                {
+                    for (int j = 0; j < cells[i].Length; j++)
+                    {
+                        cells[i][j].Text = sudokuSolver.GetValue(i, j).ToString();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("An error occurred while displaying values: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        #endregion Private layout methods
+
+        #region Private methods
+        private void UpdateSudokuValues()
+        {
+            for (int i = 0; i < cells.Length; i++)
+            {
+                for (int j = 0; j < cells[i].Length; j++)
+                {
+                    if (string.IsNullOrWhiteSpace(cells[i][j].Text))
+                    {
+                        sudokuSolver.SetValue(i, j, 0);
+                    }
+                    else
+                    {
+                        if (int.TryParse(cells[i][j].Text, out int newValue))
+                        {
+                            sudokuSolver.SetValue(i, j, newValue);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void UpdateCell(SudokuCell updatedCell)
+        {
+            cells[updatedCell.Row][updatedCell.Column].Text = updatedCell.Value.ToString();
+        }
 
         private void ChangeSolverButtonText(string text)
         {
@@ -233,5 +255,65 @@ namespace Sudoku_SPC
                 btnSolvePuzzle.Text = text;
             }));
         }
+        #endregion Private methods
+
+        #region Save methods
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenSaveDialog();
+        }
+        private bool SaveBeforeClose()
+        {
+            if (MessageBox.Show("Do you want to save the current game before exiting?", "Save Game", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                return OpenSaveDialog();
+            }
+            return true;
+        }
+
+        private bool OpenSaveDialog()
+        {
+            bool result = false;
+            try
+            {
+                using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+                {
+                    saveFileDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
+                    saveFileDialog.Title = "Save Sudoku Game";
+
+                    if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        string filePath = saveFileDialog.FileName;
+                        SaveGridToFile(filePath);
+                        result = true;
+                        MessageBox.Show("Game saved successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("An error occurred while saving the game: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            return result;
+        }
+
+        private void SaveGridToFile(string filePath)
+        {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < cells.Length; i++)
+            {
+                for (int j = 0; j < cells[i].Length; j++)
+                {
+                    if (string.IsNullOrWhiteSpace(cells[i][j].Text)) { sb.Append(0); }
+                    else { sb.Append(cells[i][j].Text); }
+
+                    if (j < cells[i].Length - 1)
+                        sb.Append(",");
+                }
+                sb.AppendLine();
+            }
+            File.WriteAllText(filePath, sb.ToString());
+        }
+        #endregion Save methods
     }
 }
