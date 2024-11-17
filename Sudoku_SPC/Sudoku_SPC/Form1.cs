@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 
 namespace Sudoku_SPC
 {
@@ -35,8 +36,15 @@ namespace Sudoku_SPC
             sudokuSolver.ExceptionThrown += SudokuSolver_ExceptionThrown;
 
 #if DEBUG
-            sudokuSolver.FillGridFromFile("sudoku.txt");
-            DisplayValues();
+            try
+            {
+                sudokuSolver.FillGridFromFile("SavedGames\\sudoku.txt");
+                DisplayValues();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("An error occurred while opening the saved game: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
 #endif
         }
 
@@ -44,7 +52,7 @@ namespace Sudoku_SPC
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (closingProcess) return;
-            if (SaveBeforeClose() is false)
+            if (SaveTheGameAsk() is false)
             {
                 e.Cancel = true; 
             }
@@ -52,7 +60,7 @@ namespace Sudoku_SPC
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (SaveBeforeClose() is false)
+            if (SaveTheGameAsk() is false)
             {
                 return; 
             }
@@ -62,33 +70,7 @@ namespace Sudoku_SPC
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            try
-            {
-                using (OpenFileDialog openFileDialog = new OpenFileDialog())
-                {
-                    openFileDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
-                    openFileDialog.Title = "Select a Text File";
-
-                    if (openFileDialog.ShowDialog() == DialogResult.OK)
-                    {
-                        string filePath = openFileDialog.FileName;
-                        // Read the file contents
-                        try
-                        {
-                            sudokuSolver.FillGridFromFile(filePath);
-                            DisplayValues();
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show("Error reading file: " + ex.Message);
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("An error occurred while opening the file: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            OpenTheGame();
         }
 
         private void btnSolvePuzzle_Click(object sender, EventArgs e)
@@ -129,6 +111,23 @@ namespace Sudoku_SPC
         {
             sudokuSolver.VisualizationEnabled = cbVisualization.Checked;
         }
+        private void clearTheGridToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ClearFullGrid();
+        }
+
+        private void btnNextGame_Click(object sender, EventArgs e)
+        {
+            if (SaveTheGameAsk())
+            {
+                LoadNextRandomGame();
+            }
+        }
+
+        private void btnSaveGame_Click(object sender, EventArgs e)
+        {
+            OpenSaveDialog();
+        }
         #endregion Event handlers
 
         #region Private layout methods
@@ -146,6 +145,8 @@ namespace Sudoku_SPC
         private void InitializeLayout(int x, int y)
         {
             btnSolvePuzzle.Location = new Point(x, y - 100);
+            btnNextGame.Location = new Point(x + 280, y - 100);
+            btnSaveGame.Location = new Point(x + 450, y - 100);
         }
 
         private void InitializeSudokuGrid()
@@ -255,14 +256,28 @@ namespace Sudoku_SPC
                 btnSolvePuzzle.Text = text;
             }));
         }
+
+        private void ClearFullGrid()
+        {
+            if (SaveTheGameAsk())
+            {
+                for (int i = 0; i < cells.Length; i++)
+                {
+                    for (int j = 0; j < cells[i].Length; j++)
+                    {
+                        cells[i][j].Text = string.Empty;
+                    }
+                }
+            }
+        }
         #endregion Private methods
 
-        #region Save methods
+        #region Save game methods
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenSaveDialog();
         }
-        private bool SaveBeforeClose()
+        private bool SaveTheGameAsk()
         {
             if (MessageBox.Show("Do you want to save the current game before exiting?", "Save Game", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
@@ -314,6 +329,62 @@ namespace Sudoku_SPC
             }
             File.WriteAllText(filePath, sb.ToString());
         }
-        #endregion Save methods
+        #endregion Save game methods
+
+        #region Open games methos
+        private void OpenTheGame()
+        {
+            try
+            {
+                using (OpenFileDialog openFileDialog = new OpenFileDialog())
+                {
+                    openFileDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
+                    openFileDialog.Title = "Select a Text File";
+
+                    if (openFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        string filePath = openFileDialog.FileName;
+                        try
+                        {
+                            sudokuSolver.FillGridFromFile(filePath);
+                            DisplayValues();
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Error reading file: " + ex.Message);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("An error occurred while opening the file: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void LoadNextRandomGame()
+        {
+            try
+            {
+                string[] files = Directory.GetFiles(@"SavedGames", "*.txt");
+                if (files.Length == 0)
+                {
+                    MessageBox.Show("No saved games found.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+                
+                Random random = new Random();
+                int randomIndex = random.Next(files.Length);
+                string randomFile = files[randomIndex];
+
+                sudokuSolver.FillGridFromFile(randomFile);
+                DisplayValues();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("An error occurred while opening the games: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        #endregion Open games methos
     }
 }

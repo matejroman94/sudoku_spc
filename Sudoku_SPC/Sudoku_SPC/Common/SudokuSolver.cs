@@ -73,14 +73,14 @@ namespace Sudoku_SPC.Common
                     {
                         if (solving(token))
                         {
-                            if (CheckGrid())
+                            if (CheckFullGrid())
                             {
                                 SudokuSolved?.Invoke(this, EventArgs.Empty);
                                 return;
                             }
                         }
                         throw new Exception("Cannot solve the Sudoku puzzle.");
-                    });
+                    }).ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {
@@ -158,7 +158,7 @@ namespace Sudoku_SPC.Common
             return true;
         }
 
-        private bool CheckGrid()
+        private bool CheckFullGrid()
         {
             int temp = 0;
             for (int i = 0; i < grid.Length; i++)

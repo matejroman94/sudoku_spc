@@ -28,23 +28,20 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.optionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.difficultyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.easyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.mediumToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.hardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.expertToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panelSudoku = new System.Windows.Forms.Panel();
             this.btnSolvePuzzle = new System.Windows.Forms.Button();
             this.cbVisualization = new System.Windows.Forms.CheckBox();
+            this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.clearTheGridToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnNextGame = new System.Windows.Forms.Button();
+            this.btnSaveGame = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -53,8 +50,7 @@
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.optionToolStripMenuItem,
-            this.aboutToolStripMenuItem});
+            this.optionsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(725, 28);
@@ -64,7 +60,6 @@
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.newToolStripMenuItem,
             this.openToolStripMenuItem,
             this.saveToolStripMenuItem,
             this.toolStripSeparator1,
@@ -72,12 +67,6 @@
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
             this.fileToolStripMenuItem.Text = "File";
-            // 
-            // newToolStripMenuItem
-            // 
-            this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-            this.newToolStripMenuItem.Text = "New";
             // 
             // openToolStripMenuItem
             // 
@@ -104,55 +93,6 @@
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
-            // 
-            // optionToolStripMenuItem
-            // 
-            this.optionToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.difficultyToolStripMenuItem});
-            this.optionToolStripMenuItem.Name = "optionToolStripMenuItem";
-            this.optionToolStripMenuItem.Size = new System.Drawing.Size(69, 24);
-            this.optionToolStripMenuItem.Text = "Option";
-            // 
-            // difficultyToolStripMenuItem
-            // 
-            this.difficultyToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.easyToolStripMenuItem,
-            this.mediumToolStripMenuItem,
-            this.hardToolStripMenuItem,
-            this.expertToolStripMenuItem});
-            this.difficultyToolStripMenuItem.Name = "difficultyToolStripMenuItem";
-            this.difficultyToolStripMenuItem.Size = new System.Drawing.Size(152, 26);
-            this.difficultyToolStripMenuItem.Text = "Difficulty";
-            // 
-            // easyToolStripMenuItem
-            // 
-            this.easyToolStripMenuItem.Name = "easyToolStripMenuItem";
-            this.easyToolStripMenuItem.Size = new System.Drawing.Size(177, 26);
-            this.easyToolStripMenuItem.Text = "Beginner";
-            // 
-            // mediumToolStripMenuItem
-            // 
-            this.mediumToolStripMenuItem.Name = "mediumToolStripMenuItem";
-            this.mediumToolStripMenuItem.Size = new System.Drawing.Size(177, 26);
-            this.mediumToolStripMenuItem.Text = "Intermediate";
-            // 
-            // hardToolStripMenuItem
-            // 
-            this.hardToolStripMenuItem.Name = "hardToolStripMenuItem";
-            this.hardToolStripMenuItem.Size = new System.Drawing.Size(177, 26);
-            this.hardToolStripMenuItem.Text = "Advanced";
-            // 
-            // expertToolStripMenuItem
-            // 
-            this.expertToolStripMenuItem.Name = "expertToolStripMenuItem";
-            this.expertToolStripMenuItem.Size = new System.Drawing.Size(177, 26);
-            this.expertToolStripMenuItem.Text = "Expert";
-            // 
-            // aboutToolStripMenuItem
-            // 
-            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(64, 24);
-            this.aboutToolStripMenuItem.Text = "About";
             // 
             // panelSudoku
             // 
@@ -187,16 +127,58 @@
             this.cbVisualization.UseVisualStyleBackColor = true;
             this.cbVisualization.CheckedChanged += new System.EventHandler(this.cbVisualization_CheckedChanged);
             // 
+            // optionsToolStripMenuItem
+            // 
+            this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.clearTheGridToolStripMenuItem});
+            this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(75, 24);
+            this.optionsToolStripMenuItem.Text = "Options";
+            // 
+            // clearTheGridToolStripMenuItem
+            // 
+            this.clearTheGridToolStripMenuItem.Name = "clearTheGridToolStripMenuItem";
+            this.clearTheGridToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.clearTheGridToolStripMenuItem.Text = "Clear the grid";
+            this.clearTheGridToolStripMenuItem.Click += new System.EventHandler(this.clearTheGridToolStripMenuItem_Click);
+            // 
+            // btnNextGame
+            // 
+            this.btnNextGame.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnNextGame.Location = new System.Drawing.Point(426, 24);
+            this.btnNextGame.Margin = new System.Windows.Forms.Padding(4);
+            this.btnNextGame.Name = "btnNextGame";
+            this.btnNextGame.Size = new System.Drawing.Size(200, 43);
+            this.btnNextGame.TabIndex = 4;
+            this.btnNextGame.Text = "Next game";
+            this.btnNextGame.UseVisualStyleBackColor = true;
+            this.btnNextGame.Click += new System.EventHandler(this.btnNextGame_Click);
+            // 
+            // btnSaveGame
+            // 
+            this.btnSaveGame.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSaveGame.Location = new System.Drawing.Point(512, 32);
+            this.btnSaveGame.Margin = new System.Windows.Forms.Padding(4);
+            this.btnSaveGame.Name = "btnSaveGame";
+            this.btnSaveGame.Size = new System.Drawing.Size(200, 43);
+            this.btnSaveGame.TabIndex = 5;
+            this.btnSaveGame.Text = "Save game";
+            this.btnSaveGame.UseVisualStyleBackColor = true;
+            this.btnSaveGame.Click += new System.EventHandler(this.btnSaveGame_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(725, 599);
+            this.Controls.Add(this.btnSaveGame);
             this.Controls.Add(this.cbVisualization);
+            this.Controls.Add(this.btnNextGame);
             this.Controls.Add(this.btnSolvePuzzle);
             this.Controls.Add(this.panelSudoku);
             this.Controls.Add(this.menuStrip1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form1";
@@ -213,21 +195,17 @@
 
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem optionToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem difficultyToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem easyToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem mediumToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem hardToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem expertToolStripMenuItem;
         private System.Windows.Forms.Panel panelSudoku;
         private System.Windows.Forms.Button btnSolvePuzzle;
         private System.Windows.Forms.CheckBox cbVisualization;
+        private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem clearTheGridToolStripMenuItem;
+        private System.Windows.Forms.Button btnSaveGame;
+        private System.Windows.Forms.Button btnNextGame;
     }
 }
 
