@@ -118,6 +118,11 @@ namespace Sudoku_SPC
 
         private void btnNextGame_Click(object sender, EventArgs e)
         {
+            if(IsGridEmpty())
+            {
+                LoadNextRandomGame();
+                return;
+            }
             if (SaveTheGameAsk())
             {
                 LoadNextRandomGame();
@@ -255,6 +260,18 @@ namespace Sudoku_SPC
             {
                 btnSolvePuzzle.Text = text;
             }));
+        }
+
+        private bool IsGridEmpty()
+        {
+            for (int i = 0; i < cells.Length; i++)
+            {
+                for (int j = 0; j < cells[i].Length; j++)
+                {
+                    if (!string.IsNullOrWhiteSpace(cells[i][j].Text)) return false;
+                }
+            }
+            return true;
         }
 
         private void ClearFullGrid()

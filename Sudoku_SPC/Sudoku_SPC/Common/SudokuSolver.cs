@@ -71,12 +71,15 @@ namespace Sudoku_SPC.Common
             {
                 await Task.Run(() =>
                     {
-                        if (solving(token))
+                        if (CheckInitialGrid())
                         {
-                            if (CheckFullGrid())
+                            if (solving(token))
                             {
-                                SudokuSolved?.Invoke(this, EventArgs.Empty);
-                                return;
+                                if (CheckFullGrid())
+                                {
+                                    SudokuSolved?.Invoke(this, EventArgs.Empty);
+                                    return;
+                                }
                             }
                         }
                         throw new Exception("Cannot solve the Sudoku puzzle.");
@@ -177,6 +180,29 @@ namespace Sudoku_SPC.Common
             }
             return true;
         }
+        private bool CheckInitialGrid()
+        {
+            int temp = 0;
+            for (int i = 0; i < grid.Length; i++)
+            {
+                for (int j = 0; j < grid[i].Length; j++)
+                {
+                    temp = grid[i][j];
+                    if (temp == 0) continue;
+
+
+                    SetCellValue(i, j, 0);
+                    if (CheckGrid(i, j, temp) is false)
+                    {
+                        SetCellValue(i, j, temp);
+                        return false;
+                    }
+                    SetCellValue(i, j, temp);
+                }
+            }
+            return true;
+        }
+
         private void SetCellValue(int row, int column, int value)
         {
             grid[row][column] = value;
