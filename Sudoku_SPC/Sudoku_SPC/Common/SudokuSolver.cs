@@ -16,8 +16,6 @@ namespace Sudoku_SPC.Common
         public event EventHandler SudokuSolved;
         public event EventHandler<Exception> ExceptionThrown;
 
-        private static int n = 0;
-
         private int size = 0;
         private int[][] grid;
 
@@ -115,7 +113,6 @@ namespace Sudoku_SPC.Common
                     SetCellValue(row, column, numbers[attempt]);
                     if (solving() is false)
                     {
-                        if(attempt != 8)
                         SetCellValue(row, column, 0);
                     }
                     else
@@ -131,7 +128,11 @@ namespace Sudoku_SPC.Common
         {
             // check row
             if (grid[row].Contains(newValue)) return false;
-            if (grid[column].Contains(newValue)) return false;
+            // check column
+            for (int i = 0; i < 9; i++)
+            {
+                if (grid[i][column] == newValue) return false;
+            }
 
             (int row, int column) box = (row / 3, column / 3);
             for (int i = 3*box.row; i < 3 * box.row + 3; i++)

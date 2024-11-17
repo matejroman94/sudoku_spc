@@ -44,18 +44,20 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panelSudoku = new System.Windows.Forms.Panel();
             this.btnSolvePuzzle = new System.Windows.Forms.Button();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
             // 
+            this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.optionToolStripMenuItem,
             this.aboutToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(544, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(725, 28);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -68,37 +70,37 @@
             this.toolStripSeparator1,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(128, 26);
             this.newToolStripMenuItem.Text = "New";
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(128, 26);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(128, 26);
             this.saveToolStripMenuItem.Text = "Save";
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(100, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(125, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(128, 26);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -107,7 +109,7 @@
             this.optionToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.difficultyToolStripMenuItem});
             this.optionToolStripMenuItem.Name = "optionToolStripMenuItem";
-            this.optionToolStripMenuItem.Size = new System.Drawing.Size(56, 20);
+            this.optionToolStripMenuItem.Size = new System.Drawing.Size(69, 24);
             this.optionToolStripMenuItem.Text = "Option";
             // 
             // difficultyToolStripMenuItem
@@ -118,70 +120,83 @@
             this.hardToolStripMenuItem,
             this.expertToolStripMenuItem});
             this.difficultyToolStripMenuItem.Name = "difficultyToolStripMenuItem";
-            this.difficultyToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.difficultyToolStripMenuItem.Size = new System.Drawing.Size(152, 26);
             this.difficultyToolStripMenuItem.Text = "Difficulty";
             // 
             // easyToolStripMenuItem
             // 
             this.easyToolStripMenuItem.Name = "easyToolStripMenuItem";
-            this.easyToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+            this.easyToolStripMenuItem.Size = new System.Drawing.Size(177, 26);
             this.easyToolStripMenuItem.Text = "Beginner";
             // 
             // mediumToolStripMenuItem
             // 
             this.mediumToolStripMenuItem.Name = "mediumToolStripMenuItem";
-            this.mediumToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+            this.mediumToolStripMenuItem.Size = new System.Drawing.Size(177, 26);
             this.mediumToolStripMenuItem.Text = "Intermediate";
             // 
             // hardToolStripMenuItem
             // 
             this.hardToolStripMenuItem.Name = "hardToolStripMenuItem";
-            this.hardToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+            this.hardToolStripMenuItem.Size = new System.Drawing.Size(177, 26);
             this.hardToolStripMenuItem.Text = "Advanced";
             // 
             // expertToolStripMenuItem
             // 
             this.expertToolStripMenuItem.Name = "expertToolStripMenuItem";
-            this.expertToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+            this.expertToolStripMenuItem.Size = new System.Drawing.Size(177, 26);
             this.expertToolStripMenuItem.Text = "Expert";
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(64, 24);
             this.aboutToolStripMenuItem.Text = "About";
             // 
             // panelSudoku
             // 
             this.panelSudoku.AutoSize = true;
             this.panelSudoku.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.panelSudoku.Location = new System.Drawing.Point(29, 73);
-            this.panelSudoku.Margin = new System.Windows.Forms.Padding(20);
+            this.panelSudoku.Location = new System.Drawing.Point(39, 90);
+            this.panelSudoku.Margin = new System.Windows.Forms.Padding(27, 25, 27, 25);
             this.panelSudoku.Name = "panelSudoku";
-            this.panelSudoku.Size = new System.Drawing.Size(486, 378);
+            this.panelSudoku.Size = new System.Drawing.Size(648, 465);
             this.panelSudoku.TabIndex = 1;
             // 
             // btnSolvePuzzle
             // 
             this.btnSolvePuzzle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSolvePuzzle.Location = new System.Drawing.Point(48, 38);
+            this.btnSolvePuzzle.Location = new System.Drawing.Point(64, 47);
+            this.btnSolvePuzzle.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnSolvePuzzle.Name = "btnSolvePuzzle";
-            this.btnSolvePuzzle.Size = new System.Drawing.Size(150, 35);
+            this.btnSolvePuzzle.Size = new System.Drawing.Size(200, 43);
             this.btnSolvePuzzle.TabIndex = 2;
             this.btnSolvePuzzle.Text = "Solve puzzle";
             this.btnSolvePuzzle.UseVisualStyleBackColor = true;
             this.btnSolvePuzzle.Click += new System.EventHandler(this.btnSolvePuzzle_Click);
             // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(288, 47);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(95, 20);
+            this.checkBox1.TabIndex = 3;
+            this.checkBox1.Text = "checkBox1";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(544, 487);
+            this.ClientSize = new System.Drawing.Size(725, 599);
+            this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.btnSolvePuzzle);
             this.Controls.Add(this.panelSudoku);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "Form1";
             this.Text = "Form1";
             this.menuStrip1.ResumeLayout(false);
@@ -209,6 +224,7 @@
         private System.Windows.Forms.ToolStripMenuItem expertToolStripMenuItem;
         private System.Windows.Forms.Panel panelSudoku;
         private System.Windows.Forms.Button btnSolvePuzzle;
+        private System.Windows.Forms.CheckBox checkBox1;
     }
 }
 
