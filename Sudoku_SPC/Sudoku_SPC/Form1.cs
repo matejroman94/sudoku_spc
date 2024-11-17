@@ -379,6 +379,7 @@ namespace Sudoku_SPC
 
                 sudokuSolver.FillGridFromFile(randomFile);
                 DisplayValues();
+                MessageBox.Show($"New game loaded.", "Game Loaded", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
